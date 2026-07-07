@@ -1,0 +1,14 @@
+---
+description: Conventional commits em portugues, sem trailers de co-autoria da IA
+alwaysApply: true
+---
+
+# Commits
+
+- Siga a especificacao de Conventional Commits (`feat`, `fix`, `chore`, `test`, `docs`, `refactor`, etc.), com mensagens em portugues.
+- Commits pequenos e atomicos, um assunto por commit.
+- NUNCA adicione trailers de co-autoria/atribuicao a IA na mensagem de commit, incluindo (mas nao se limitando a):
+  - `Co-authored-by: Cursor <cursoragent@cursor.com>`
+  - Qualquer outra linha `Co-authored-by:` referenciando ferramentas/agentes de IA.
+- A mensagem de commit deve conter apenas o assunto (e corpo opcional explicando o "porque"), sem rodape de autoria automatica.
+- Se uma mensagem de commit for gerada com esse trailer, remova-o antes de finalizar o commit (ex.: `git commit --amend`).
