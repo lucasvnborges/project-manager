@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Observacao: "status" e "risk" sao armazenados como String no banco (o
+// provider sqlite do Prisma nao suporta enum nativo). Os valores validos
+// sao definidos uma unica vez em @repo/shared-types (ProjectStatus,
+// ProjectRisk) e validados na camada de aplicacao via class-validator.
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  budget      Float
+  description String
+  status      String   @default("EM_ANALISE")
+  risk        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
