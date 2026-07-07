@@ -10,17 +10,19 @@ import { AiClient } from '../ai-client.interface';
  */
 @Injectable()
 export class MockAiClient implements AiClient {
-  async complete(): Promise<string> {
-    return JSON.stringify({
-      summary:
-        'Analise gerada em modo simulado (sem chamada a um provedor de IA real). ' +
-        'Este texto ilustra o formato de resposta esperado da funcionalidade.',
-      attentionPoints: [
-        'Configure AI_PROVIDER=openai e OPENAI_API_KEY para obter uma analise real.',
-        'Revise prazos e orcamento periodicamente para manter o risco calculado atualizado.',
-      ],
-      executiveRecommendation:
-        'Nenhuma recomendacao real disponivel no modo simulado; trate este retorno apenas como exemplo estrutural.',
-    });
+  complete(): Promise<string> {
+    return Promise.resolve(
+      JSON.stringify({
+        summary:
+          'Analise gerada em modo simulado (sem chamada a um provedor de IA real). ' +
+          'Este texto ilustra o formato de resposta esperado da funcionalidade.',
+        attentionPoints: [
+          'Configure AI_PROVIDER=openai e OPENAI_API_KEY para obter uma analise real.',
+          'Revise prazos e orcamento periodicamente para manter o risco calculado atualizado.',
+        ],
+        executiveRecommendation:
+          'Nenhuma recomendacao real disponivel no modo simulado; trate este retorno apenas como exemplo estrutural.',
+      }),
+    );
   }
 }

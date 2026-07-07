@@ -23,7 +23,9 @@ describe('ProjectAnalysisPromptBuilder', () => {
     expect(prompt).toContain('Plataforma de pagamentos');
     expect(prompt).toContain('Em andamento');
     expect(prompt).toContain('Alto');
-    expect(prompt).toContain('Nova plataforma de pagamentos para o marketplace.');
+    expect(prompt).toContain(
+      'Nova plataforma de pagamentos para o marketplace.',
+    );
   });
 
   it('instrui explicitamente o formato de resposta em JSON com os 3 campos exigidos', () => {

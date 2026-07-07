@@ -23,7 +23,7 @@ export function IsAfter(
       options: validationOptions,
       validator: {
         validate(value: unknown, args: ValidationArguments) {
-          const [relatedPropertyName] = args.constraints;
+          const relatedPropertyName = args.constraints[0] as string;
           const relatedValue = (args.object as Record<string, unknown>)[
             relatedPropertyName
           ];
@@ -34,7 +34,7 @@ export function IsAfter(
           );
         },
         defaultMessage(args: ValidationArguments) {
-          const [relatedPropertyName] = args.constraints;
+          const relatedPropertyName = args.constraints[0] as string;
           return `${args.property} deve ser posterior a ${relatedPropertyName}`;
         },
       },

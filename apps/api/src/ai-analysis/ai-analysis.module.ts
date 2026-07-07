@@ -20,7 +20,9 @@ const logger = new Logger('AiAnalysisModule');
         const apiKey = config.get<string>('OPENAI_API_KEY');
 
         if (provider === 'openai' && apiKey) {
-          logger.log('Usando OpenAiClient (integracao real) para analise com IA.');
+          logger.log(
+            'Usando OpenAiClient (integracao real) para analise com IA.',
+          );
           return new OpenAiClient({
             apiKey,
             model: config.get<string>('OPENAI_MODEL') ?? 'gpt-4o-mini',

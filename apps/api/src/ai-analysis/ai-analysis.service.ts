@@ -37,7 +37,10 @@ export class AiAnalysisService {
       const parsed = JSON.parse(extractJsonObject(raw)) as RawAiAnalysisPayload;
 
       return {
-        summary: this.asNonEmptyString(parsed.summary, this.fallbackSummary(project)),
+        summary: this.asNonEmptyString(
+          parsed.summary,
+          this.fallbackSummary(project),
+        ),
         attentionPoints: this.asStringArray(parsed.attentionPoints),
         executiveRecommendation: this.asNonEmptyString(
           parsed.executiveRecommendation,

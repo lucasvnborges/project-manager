@@ -65,7 +65,10 @@ describe('HttpExceptionFilter', () => {
     const { host, json, status } = createMockHost();
 
     filter.catch(
-      new BadRequestException(['name nao pode ser vazio', 'budget deve ser positivo']),
+      new BadRequestException([
+        'name nao pode ser vazio',
+        'budget deve ser positivo',
+      ]),
       host,
     );
 
@@ -73,10 +76,7 @@ describe('HttpExceptionFilter', () => {
     expect(json).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: HttpStatus.BAD_REQUEST,
-        message: [
-          'name nao pode ser vazio',
-          'budget deve ser positivo',
-        ],
+        message: ['name nao pode ser vazio', 'budget deve ser positivo'],
       }),
     );
   });

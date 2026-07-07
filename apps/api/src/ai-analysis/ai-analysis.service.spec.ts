@@ -1,5 +1,4 @@
 import { Project, ProjectRisk, ProjectStatus } from '@repo/shared-types';
-import { AiClient } from './ai-client.interface';
 import { AiAnalysisService } from './ai-analysis.service';
 import { ProjectAnalysisPromptBuilder } from './project-analysis-prompt.builder';
 
@@ -26,7 +25,7 @@ describe('AiAnalysisService', () => {
   beforeEach(() => {
     aiClient = { complete: jest.fn() };
     service = new AiAnalysisService(
-      aiClient as unknown as AiClient,
+      aiClient,
       new ProjectAnalysisPromptBuilder(),
     );
   });
@@ -85,7 +84,9 @@ describe('AiAnalysisService', () => {
   });
 
   it('usa um fallback textual quando a resposta nao e um JSON valido', async () => {
-    aiClient.complete.mockResolvedValue('desculpe, nao consigo ajudar com isso.');
+    aiClient.complete.mockResolvedValue(
+      'desculpe, nao consigo ajudar com isso.',
+    );
 
     const result = await service.analyze(buildProject({ name: 'Projeto Y' }));
 

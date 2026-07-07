@@ -63,7 +63,10 @@ describe('Projects (e2e)', () => {
       await request(app.getHttpServer())
         .post('/projects')
         .send(
-          validProjectPayload({ startDate: '2026-06-01', endDate: '2026-01-01' }),
+          validProjectPayload({
+            startDate: '2026-06-01',
+            endDate: '2026-01-01',
+          }),
         )
         .expect(400);
     });
@@ -83,7 +86,9 @@ describe('Projects (e2e)', () => {
         .expect(200);
 
       expect(
-        response.body.some((project: { id: string }) => project.id === projectId),
+        response.body.some(
+          (project: { id: string }) => project.id === projectId,
+        ),
       ).toBe(true);
     });
 

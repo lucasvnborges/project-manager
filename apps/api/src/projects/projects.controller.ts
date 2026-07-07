@@ -9,12 +9,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProjectAiAnalysis } from '@repo/shared-types';
 import { AiAnalysisService } from '../ai-analysis/ai-analysis.service';
 import { ChangeProjectStatusDto } from './dto/change-project-status.dto';
@@ -63,7 +58,9 @@ export class ProjectsController {
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Atualiza dados do projeto (recalcula o risco quando necessario)' })
+  @ApiOperation({
+    summary: 'Atualiza dados do projeto (recalcula o risco quando necessario)',
+  })
   @ApiParam({ name: 'id', example: '9b0a3655-3845-4f72-8514-c560c926edee' })
   @ApiResponse({ status: 200, type: ProjectResponseDto })
   @ApiResponse({ status: 400, description: 'Dados de entrada invalidos' })
@@ -99,7 +96,10 @@ export class ProjectsController {
   @ApiParam({ name: 'id', example: '9b0a3655-3845-4f72-8514-c560c926edee' })
   @ApiResponse({ status: 200, type: ProjectResponseDto })
   @ApiResponse({ status: 404, description: 'Projeto nao encontrado' })
-  @ApiResponse({ status: 409, description: 'Transicao de status nao permitida' })
+  @ApiResponse({
+    status: 409,
+    description: 'Transicao de status nao permitida',
+  })
   async changeStatus(
     @Param('id') id: string,
     @Body() changeStatusDto: ChangeProjectStatusDto,
