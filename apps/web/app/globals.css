@@ -1,50 +1,66 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import 'tailwindcss';
+
+/*
+ * Design system da aplicacao: paleta neutra com um acento vibrante,
+ * tokens semanticos para status/risco (fundo pastel + texto saturado,
+ * estilo "pill"), espacamento generoso e cantos suaves. Ver plano de
+ * arquitetura no README para o racional de cada token.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-accent: #635bff;
+  --color-accent-hover: #4f46e0;
+  --color-accent-contrast: #ffffff;
+
+  --color-canvas: #f6f9fc;
+  --color-surface: #ffffff;
+  --color-line: #e3e8ee;
+  --color-ink: #0a2540;
+  --color-ink-muted: #425466;
+
+  --color-status-analise-surface: #f1f5f9;
+  --color-status-analise-content: #475569;
+  --color-status-aprovado-surface: #e6f0ff;
+  --color-status-aprovado-content: #0055cc;
+  --color-status-andamento-surface: #eef0ff;
+  --color-status-andamento-content: #4338ca;
+  --color-status-encerrado-surface: #e3f9e5;
+  --color-status-encerrado-content: #1a7f37;
+  --color-status-cancelado-surface: #fdecec;
+  --color-status-cancelado-content: #c0362c;
+
+  --color-risk-baixo-surface: #e3f9e5;
+  --color-risk-baixo-content: #1a7f37;
+  --color-risk-medio-surface: #fff6e5;
+  --color-risk-medio-content: #b45309;
+  --color-risk-alto-surface: #fdecec;
+  --color-risk-alto-content: #c0362c;
+
+  --radius-control: 0.5rem;
+  --radius-card: 0.75rem;
+
+  --shadow-subtle: 0 1px 2px rgba(10, 37, 64, 0.04);
+  --shadow-elevated: 0 4px 12px rgba(10, 37, 64, 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    box-sizing: border-box;
   }
-}
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.imgDark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+  html,
+  body {
+    max-width: 100vw;
   }
 
-  .imgLight {
-    display: none;
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
   }
-  .imgDark {
-    display: unset;
+
+  a {
+    color: inherit;
   }
 }
