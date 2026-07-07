@@ -1,159 +1,141 @@
-# Turborepo starter
+# Sistema de Gestão de Projetos
 
-This Turborepo starter is maintained by the Turborepo core team.
+Aplicação fullstack para gerenciamento simplificado de projetos de uma empresa: cadastro, consulta, edição, remoção, controle de status e cálculo automático de risco, com uma análise textual gerada com apoio de Inteligência Artificial.
 
-## Using this example
+- **Frontend**: React (Next.js/App Router) + TypeScript
+- **Backend**: Node.js com NestJS + TypeScript
+- **Banco de dados**: SQLite via Prisma (zero configuração, arquivo local)
+- **Monorepo**: Turborepo (npm workspaces)
 
-Run the following command:
+> Consulte [`AI_USAGE.md`](AI_USAGE.md) para o detalhamento do uso de IA na construção deste projeto.
 
-```sh
-npx create-turbo@latest
+## Estrutura do repositório
+
+```
+apps/
+  api/            API NestJS (regras de negocio, Prisma, analise com IA, Swagger)
+  web/            Frontend Next.js (listagem, formulario, detalhe, analise com IA)
+packages/
+  shared-types/   Enums, contratos e maquina de estados compartilhados entre api e web
+  eslint-config/  Configuracoes de lint reutilizadas pelos apps
+  typescript-config/ tsconfigs base reutilizados pelos apps/packages
 ```
 
-## What's inside?
+## Pré-requisitos
 
-This Turborepo includes the following packages/apps:
+- Node.js 20+ (recomendado 22, usado no desenvolvimento)
+- npm 10+
 
-### Apps and Packages
+## Instalação e execução
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+```bash
+# 1. instalar dependencias de todo o monorepo
+npm install
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+# 2. configurar variaveis de ambiente
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env.local
 
-### Utilities
+# 3. criar o banco SQLite e aplicar as migrations
+npm run db:migrate --workspace=api
 
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+# 4. subir api (http://localhost:3001) e web (http://localhost:3000) juntos
+npm run dev
 ```
 
-Without global `turbo`, use your package manager:
+Para rodar cada app isoladamente: `npm run dev --workspace=api` ou `npm run dev --workspace=web`.
 
-```sh
-cd my-turborepo
-npx turbo build
-npm dlx turbo build
-npm exec turbo build
+Documentação interativa da API (Swagger): **http://localhost:3001/docs**.
+
+### Variáveis de ambiente
+
+**`apps/api/.env`**
+
+| Variável | Descrição | Default |
+| --- | --- | --- |
+| `PORT` | Porta da API | `3001` |
+| `DATABASE_URL` | Conexão SQLite (arquivo local) | `file:./dev.db` |
+| `CORS_ORIGIN` | Origem permitida para o frontend | `http://localhost:3000` |
+| `AI_PROVIDER` | `openai` (real) ou `mock` (fallback sem custo/rede) | `mock` |
+| `OPENAI_API_KEY` | Chave da OpenAI (obrigatória apenas se `AI_PROVIDER=openai`) | — |
+| `OPENAI_MODEL` | Modelo usado na análise | `gpt-4o-mini` |
+
+Se `AI_PROVIDER=openai` mas `OPENAI_API_KEY` não estiver definida, a aplicação usa automaticamente o `MockAiClient` (ver seção [Análise com IA](#análise-com-ia)).
+
+**`apps/web/.env.local`**
+
+| Variável | Descrição | Default |
+| --- | --- | --- |
+| `NEXT_PUBLIC_API_URL` | URL base da API | `http://localhost:3001` |
+
+Nenhuma chave/segredo é versionado no repositório; apenas os arquivos `.env.example` (sem valores sensíveis).
+
+## Regras de negócio
+
+### Status do projeto
+
+Todo projeto é criado com status **Em análise**. A transição segue uma máquina de estados fixa:
+
+```
+Em análise → Aprovado → Em andamento → Encerrado
+Em análise, Aprovado ou Em andamento → Cancelado
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Não é permitido pular etapas. `Encerrado` e `Cancelado` são estados terminais (nenhuma transição posterior é permitida). Projetos com status `Em andamento` ou `Encerrado` não podem ser removidos.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+### Cálculo automático de risco
 
-```sh
-turbo build --filter=docs
+Calculado a partir do orçamento e do prazo (diferença entre data de início e previsão de término), e recalculado sempre que qualquer um desses três campos é criado/alterado:
+
+| Regra | Baixo | Médio | Alto |
+| --- | --- | --- | --- |
+| Orçamento | até R$ 100.000 | R$ 100.001 – R$ 500.000 | acima de R$ 500.000 |
+| Prazo | até 3 meses | 3–6 meses | acima de 6 meses |
+
+Quando as duas regras discordam, **prevalece o maior risco**.
+
+## Análise com IA
+
+`GET /projects/:id/ai-analysis` retorna um resumo, pontos de atenção e uma recomendação executiva sobre o projeto.
+
+A chamada ao provedor de IA está isolada em camadas próprias (nunca no controller):
+
+- `ProjectAnalysisPromptBuilder`: monta o prompt a partir dos dados do projeto.
+- `AiClient` (interface): porta que qualquer provedor deve implementar.
+- `OpenAiClient`: implementação real, via SDK oficial da OpenAI.
+- `MockAiClient`: implementação simulada (sem custo/rede), usada como fallback quando não há chave configurada e nos testes automatizados.
+- `AiAnalysisService`: orquestra as peças acima e normaliza a resposta, com fallback textual caso o modelo não retorne um JSON válido.
+
+Para usar a integração real, defina `AI_PROVIDER=openai` e `OPENAI_API_KEY` em `apps/api/.env`.
+
+## Testes
+
+```bash
+# testes unitarios (api e web)
+npm run test
+
+# testes de integracao (e2e) da api, endpoint a endpoint
+npm run test:e2e --workspace=api
 ```
 
-Without global `turbo`:
+- **Backend**: Jest. Unitários para `RiskCalculatorService`, `StatusTransitionValidator`, `ProjectsService`, `AiAnalysisService` e o filtro global de erros; e2e (supertest) cobrindo os 7 endpoints com um banco SQLite dedicado a testes.
+- **Frontend**: Vitest + React Testing Library + MSW, cobrindo `StatusBadge`/`RiskBadge`, `StatusActions`, `AiAnalysisPanel` e `ProjectFormModal`.
 
-```sh
-npx turbo build --filter=docs
-npm exec turbo build --filter=docs
-npm exec turbo build --filter=docs
-```
+## Decisões técnicas e premissas assumidas
 
-### Develop
+- **Duração em meses**: calculada com `date-fns#differenceInMonths` (meses cheios de calendário, ex.: 01/01 → 01/04 = 3 meses), pois a regra de negócio não especifica o método exato.
+- **Orçamento como `Float`**: o provider SQLite do Prisma tem suporte limitado a `Decimal`; em um cenário de produção com outro banco, `Decimal`/valores em centavos seriam preferíveis para evitar imprecisão de ponto flutuante.
+- **Status/risco armazenados como `String` no banco**: o SQLite não possui enum nativo; os valores válidos são garantidos pela aplicação (`class-validator` + `@repo/shared-types`), não por uma constraint do banco.
+- **Estados terminais**: `Encerrado` e `Cancelado` não permitem nenhuma transição posterior (extensão razoável da regra "qualquer status → Cancelado").
+- **Modelo de IA padrão**: `gpt-4o-mini`, por custo/latência.
+- **Sem autenticação, paginação avançada ou filtros complexos**: fora do escopo do desafio.
 
-To develop all apps and packages, run the following command:
+## Scripts principais (raiz)
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-npm exec turbo dev
-npm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-npm exec turbo dev --filter=web
-npm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-npm exec turbo login
-npm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-npm exec turbo link
-npm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+| Comando | Descrição |
+| --- | --- |
+| `npm run dev` | Sobe api + web em modo desenvolvimento |
+| `npm run build` | Builda todos os apps/pacotes |
+| `npm run lint` | Lint em todo o monorepo |
+| `npm run check-types` | Checagem de tipos em todo o monorepo |
+| `npm run test` | Testes unitários de api e web |
