@@ -9,6 +9,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ProjectAiAnalysis } from '@repo/shared-types';
+import { AiAnalysisService } from '../ai-analysis/ai-analysis.service';
 import { ChangeProjectStatusDto } from './dto/change-project-status.dto';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
@@ -17,7 +19,10 @@ import { ProjectsService } from './projects.service';
 
 @Controller('projects')
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService) {}
+  constructor(
+    private readonly projectsService: ProjectsService,
+    private readonly aiAnalysisService: AiAnalysisService,
+  ) {}
 
   @Post()
   async create(
@@ -64,5 +69,11 @@ export class ProjectsController {
       changeStatusDto,
     );
     return ProjectResponseDto.fromDomain(project);
+  }
+
+  @Get(':id/ai-analysis')
+  async getAiAnalysis(@Param('id') id: string): Promise<ProjectAiAnalysis> {
+    const project = await this.projectsService.findById(id);
+    return this.aiAnalysisService.analyze(project);
   }
 }
