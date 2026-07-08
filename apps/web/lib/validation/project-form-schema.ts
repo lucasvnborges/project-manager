@@ -11,18 +11,18 @@ export const projectFormSchema = z
       .string()
       .trim()
       .min(1, 'Informe o nome do projeto.')
-      .max(150, 'O nome deve ter no maximo 150 caracteres.'),
-    startDate: z.string().min(1, 'Informe a data de inicio.'),
-    endDate: z.string().min(1, 'Informe a previsao de termino.'),
+      .max(150, 'O nome deve ter no máximo 150 caracteres.'),
+    startDate: z.string().min(1, 'Informe a data de início.'),
+    endDate: z.string().min(1, 'Informe a previsão de término.'),
     budget: z
-      .number({ message: 'Informe um valor numerico.' })
-      .min(0, 'O orcamento nao pode ser negativo.'),
-    description: z.string().trim().min(1, 'Informe uma descricao.'),
+      .number({ message: 'Informe um valor numérico.' })
+      .min(0, 'O orçamento não pode ser negativo.'),
+    description: z.string().trim().min(1, 'Informe uma descrição.'),
   })
   .refine(
     (data) => new Date(data.endDate).getTime() > new Date(data.startDate).getTime(),
     {
-      message: 'A previsao de termino deve ser posterior a data de inicio.',
+      message: 'A previsão de término deve ser posterior à data de início.',
       path: ['endDate'],
     },
   );

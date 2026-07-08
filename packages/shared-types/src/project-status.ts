@@ -31,6 +31,11 @@ export const PROJECT_STATUSES_BLOCKING_DELETION: ProjectStatus[] = [
   ProjectStatus.ENCERRADO,
 ];
 
+export const PROJECT_STATUSES_BLOCKING_EDITION: ProjectStatus[] = [
+  ProjectStatus.ENCERRADO,
+  ProjectStatus.CANCELADO,
+];
+
 export function isStatusTransitionAllowed(
   from: ProjectStatus,
   to: ProjectStatus,

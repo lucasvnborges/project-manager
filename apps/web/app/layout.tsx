@@ -7,8 +7,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'Gestao de Projetos',
-  description: 'Cadastro, acompanhamento de status, risco e analise de projetos.',
+  title: 'Gestão de projetos',
+  description: 'Cadastro, acompanhamento de status, risco e análise de projetos.',
 };
 
 export default function RootLayout({

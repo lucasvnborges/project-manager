@@ -13,6 +13,7 @@ const buttonVariants = cva(
         ghost: 'text-ink-muted hover:bg-canvas hover:text-ink',
         destructive:
           'bg-risk-alto-content text-white hover:opacity-90 focus-visible:ring-risk-alto-content',
+        status: 'text-white hover:opacity-90',
       },
       size: {
         default: 'h-10 px-4',

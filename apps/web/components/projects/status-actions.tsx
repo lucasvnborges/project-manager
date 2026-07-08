@@ -10,12 +10,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { useChangeProjectStatus } from '@/hooks/use-project-mutations';
 import { ApiError } from '@/lib/api-client';
+import { STATUS_ADVANCE_BUTTON_CLASSES } from '@/lib/design-tokens';
+import { cn } from '@/lib/utils';
 
 /**
- * Acoes de avancar/cancelar status, derivadas da mesma maquina de
+ * Ações de avançar/cancelar status, derivadas da mesma máquina de
  * estados usada no backend (PROJECT_STATUS_TRANSITIONS). Nunca permite
- * pular etapas: so exibe o proximo status valido e a opcao de cancelar
- * quando aplicavel para o status atual.
+ * pular etapas: só exibe o próximo status válido e a opção de cancelar
+ * quando aplicável para o status atual.
  */
 export function StatusActions({
   project,
@@ -41,7 +43,7 @@ export function StatusActions({
           toast.error(
             error instanceof ApiError
               ? error.message
-              : 'Nao foi possivel atualizar o status.',
+              : 'Não foi possível atualizar o status.',
           ),
       },
     );
@@ -50,22 +52,14 @@ export function StatusActions({
   if (!advanceTo && !canCancel) {
     return (
       <p className="text-sm text-ink-muted">
-        Este projeto esta em um status final; nenhuma transicao esta
-        disponivel.
+        Este projeto está em um status final; nenhuma transição está
+        disponível.
       </p>
     );
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {advanceTo && (
-        <Button
-          onClick={() => handleChange(advanceTo)}
-          disabled={changeStatus.isPending}
-        >
-          Avancar para {PROJECT_STATUS_LABELS[advanceTo]}
-        </Button>
-      )}
+    <div className="flex flex-wrap items-center justify-start gap-2">
       {canCancel && (
         <Button
           variant="destructive"
@@ -73,6 +67,16 @@ export function StatusActions({
           disabled={changeStatus.isPending}
         >
           Cancelar projeto
+        </Button>
+      )}
+      {advanceTo && (
+        <Button
+          variant="status"
+          className={cn(STATUS_ADVANCE_BUTTON_CLASSES[advanceTo])}
+          onClick={() => handleChange(advanceTo)}
+          disabled={changeStatus.isPending}
+        >
+          Avançar para {PROJECT_STATUS_LABELS[advanceTo]}
         </Button>
       )}
     </div>

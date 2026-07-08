@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import type { Project } from '@repo/shared-types';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,7 @@ import {
   type ProjectFormValues,
 } from '@/lib/validation/project-form-schema';
 import { zodResolver } from '@/lib/validation/zod-resolver';
+import { BudgetInput } from './budget-input';
 
 interface ProjectFormModalProps {
   open: boolean;
@@ -54,6 +55,7 @@ export function ProjectFormModal({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<ProjectFormValues>({
     resolver: zodResolver(projectFormSchema),
@@ -90,7 +92,7 @@ export function ProjectFormModal({
         toast.error(
           error instanceof ApiError
             ? error.message
-            : 'Nao foi possivel salvar o projeto.',
+            : 'Não foi possível salvar o projeto.',
         );
       },
     });
@@ -105,8 +107,8 @@ export function ProjectFormModal({
           </DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? 'Atualize os dados do projeto. O risco e recalculado automaticamente.'
-              : 'O status inicial sera definido automaticamente como "Em analise".'}
+              ? 'Atualize os dados do projeto. O risco é recalculado automaticamente.'
+              : 'O status inicial será definido automaticamente como "Em análise".'}
           </DialogDescription>
         </DialogHeader>
 
@@ -130,7 +132,7 @@ export function ProjectFormModal({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="startDate">Data de inicio</Label>
+              <Label htmlFor="startDate">Data de início</Label>
               <Input id="startDate" type="date" {...register('startDate')} />
               {errors.startDate && (
                 <p className="text-xs text-risk-alto-content">
@@ -139,7 +141,7 @@ export function ProjectFormModal({
               )}
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="endDate">Previsao de termino</Label>
+              <Label htmlFor="endDate">Previsão de término</Label>
               <Input id="endDate" type="date" {...register('endDate')} />
               {errors.endDate && (
                 <p className="text-xs text-risk-alto-content">
@@ -150,13 +152,18 @@ export function ProjectFormModal({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="budget">Orcamento total (R$)</Label>
-            <Input
-              id="budget"
-              type="number"
-              step="0.01"
-              min={0}
-              {...register('budget', { valueAsNumber: true })}
+            <Label htmlFor="budget">Orçamento total (R$)</Label>
+            <Controller
+              name="budget"
+              control={control}
+              render={({ field }) => (
+                <BudgetInput
+                  id="budget"
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
             />
             {errors.budget && (
               <p className="text-xs text-risk-alto-content">
@@ -166,7 +173,7 @@ export function ProjectFormModal({
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="description">Descricao</Label>
+            <Label htmlFor="description">Descrição</Label>
             <Textarea id="description" rows={4} {...register('description')} />
             {errors.description && (
               <p className="text-xs text-risk-alto-content">

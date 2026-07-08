@@ -21,34 +21,34 @@ describe('ProjectFormModal', () => {
         screen.getByText(/informe o nome do projeto/i),
       ).toBeInTheDocument(),
     );
-    expect(screen.getByText(/informe a data de inicio/i)).toBeInTheDocument();
+    expect(screen.getByText(/informe a data de início/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/informe a previsao de termino/i),
+      screen.getByText(/informe a previsão de término/i),
     ).toBeInTheDocument();
-    expect(screen.getByText(/informe uma descricao/i)).toBeInTheDocument();
+    expect(screen.getByText(/informe uma descrição/i)).toBeInTheDocument();
   });
 
-  it('exibe erro quando a previsao de termino nao e posterior a data de inicio', async () => {
+  it('exibe erro quando a previsão de término não é posterior à data de início', async () => {
     renderWithQueryClient(
       <ProjectFormModal open onOpenChange={() => {}} />,
     );
 
     await userEvent.type(screen.getByLabelText(/^nome$/i), 'Projeto teste');
-    fireEvent.change(screen.getByLabelText(/data de inicio/i), {
+    fireEvent.change(screen.getByLabelText(/data de início/i), {
       target: { value: '2026-05-01' },
     });
-    fireEvent.change(screen.getByLabelText(/previsao de termino/i), {
+    fireEvent.change(screen.getByLabelText(/previsão de término/i), {
       target: { value: '2026-01-01' },
     });
-    await userEvent.type(screen.getByLabelText(/orcamento total/i), '1000');
-    await userEvent.type(screen.getByLabelText(/^descricao$/i), 'Descricao');
+    await userEvent.type(screen.getByLabelText(/orçamento total/i), '100000');
+    await userEvent.type(screen.getByLabelText(/^descrição$/i), 'Descrição');
 
     await userEvent.click(screen.getByRole('button', { name: /^salvar$/i }));
 
     await waitFor(() =>
       expect(
         screen.getByText(
-          /previsao de termino deve ser posterior a data de inicio/i,
+          /previsão de término deve ser posterior à data de início/i,
         ),
       ).toBeInTheDocument(),
     );
@@ -81,16 +81,16 @@ describe('ProjectFormModal', () => {
     );
 
     await userEvent.type(screen.getByLabelText(/^nome$/i), 'Projeto valido');
-    fireEvent.change(screen.getByLabelText(/data de inicio/i), {
+    fireEvent.change(screen.getByLabelText(/data de início/i), {
       target: { value: '2026-01-01' },
     });
-    fireEvent.change(screen.getByLabelText(/previsao de termino/i), {
+    fireEvent.change(screen.getByLabelText(/previsão de término/i), {
       target: { value: '2026-03-01' },
     });
-    await userEvent.type(screen.getByLabelText(/orcamento total/i), '1000');
+    await userEvent.type(screen.getByLabelText(/orçamento total/i), '100000');
     await userEvent.type(
-      screen.getByLabelText(/^descricao$/i),
-      'Descricao valida',
+      screen.getByLabelText(/^descrição$/i),
+      'Descrição válida',
     );
 
     await userEvent.click(screen.getByRole('button', { name: /^salvar$/i }));

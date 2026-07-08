@@ -21,33 +21,33 @@ function buildProject(overrides: Partial<Project> = {}): Project {
 }
 
 describe('StatusActions', () => {
-  it('exibe "Avancar para Aprovado" e "Cancelar projeto" quando o status e Em analise', () => {
+  it('exibe "Avançar para Aprovado" e "Cancelar projeto" quando o status é Em análise', () => {
     renderWithQueryClient(
       <StatusActions project={buildProject({ status: ProjectStatus.EM_ANALISE })} />,
     );
 
     expect(
-      screen.getByRole('button', { name: /avancar para aprovado/i }),
+      screen.getByRole('button', { name: /avançar para aprovado/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /cancelar projeto/i }),
     ).toBeInTheDocument();
   });
 
-  it('exibe apenas "Avancar para Encerrado" (sem opcao de retroceder) quando o status e Em andamento', () => {
+  it('exibe apenas "Avançar para Encerrado" (sem opção de retroceder) quando o status é Em andamento', () => {
     renderWithQueryClient(
       <StatusActions project={buildProject({ status: ProjectStatus.EM_ANDAMENTO })} />,
     );
 
     expect(
-      screen.getByRole('button', { name: /avancar para encerrado/i }),
+      screen.getByRole('button', { name: /avançar para encerrado/i }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /cancelar projeto/i }),
     ).toBeInTheDocument();
   });
 
-  it('nao exibe nenhuma acao quando o status e final (Encerrado)', () => {
+  it('não exibe nenhuma ação quando o status é final (Encerrado)', () => {
     renderWithQueryClient(
       <StatusActions project={buildProject({ status: ProjectStatus.ENCERRADO })} />,
     );
@@ -56,7 +56,7 @@ describe('StatusActions', () => {
     expect(screen.getByText(/status final/i)).toBeInTheDocument();
   });
 
-  it('nao exibe nenhuma acao quando o status e final (Cancelado)', () => {
+  it('não exibe nenhuma ação quando o status é final (Cancelado)', () => {
     renderWithQueryClient(
       <StatusActions project={buildProject({ status: ProjectStatus.CANCELADO })} />,
     );

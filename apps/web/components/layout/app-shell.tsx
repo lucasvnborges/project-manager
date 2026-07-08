@@ -8,7 +8,7 @@ export function AppShell({
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex h-16 max-w-6xl items-center px-6">
           <span className="text-base font-semibold tracking-tight text-ink">
-            Gestao de Projetos
+            Gestão de projetos
           </span>
         </div>
       </header>

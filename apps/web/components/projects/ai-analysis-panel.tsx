@@ -26,10 +26,10 @@ export function AiAnalysisPanel({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-base font-semibold text-ink">
-            Analise com IA
+            Análise com IA
           </h2>
           <p className="text-sm text-ink-muted">
-            Resumo, pontos de atencao e recomendacao executiva gerados com
+            Resumo, pontos de atenção e recomendação executiva gerados com
             apoio de IA.
           </p>
         </div>
@@ -42,7 +42,7 @@ export function AiAnalysisPanel({
             ? 'Gerando...'
             : generateAnalysis.data
               ? 'Gerar novamente'
-              : 'Gerar analise'}
+              : 'Gerar análise'}
         </Button>
       </div>
 
@@ -50,7 +50,7 @@ export function AiAnalysisPanel({
         <p className="mt-4 text-sm text-risk-alto-content">
           {generateAnalysis.error instanceof ApiError
             ? generateAnalysis.error.message
-            : 'Nao foi possivel gerar a analise. Tente novamente.'}
+            : 'Não foi possível gerar a análise. Tente novamente.'}
         </p>
       )}
 
@@ -63,7 +63,7 @@ export function AiAnalysisPanel({
 
           {generateAnalysis.data.attentionPoints.length > 0 && (
             <div>
-              <h3 className="font-medium text-ink">Pontos de atencao</h3>
+              <h3 className="font-medium text-ink">Pontos de atenção</h3>
               <ul className="list-disc pl-5 text-ink-muted">
                 {generateAnalysis.data.attentionPoints.map((point) => (
                   <li key={point}>{point}</li>
@@ -73,7 +73,7 @@ export function AiAnalysisPanel({
           )}
 
           <div>
-            <h3 className="font-medium text-ink">Recomendacao executiva</h3>
+            <h3 className="font-medium text-ink">Recomendação executiva</h3>
             <p className="text-ink-muted">
               {generateAnalysis.data.executiveRecommendation}
             </p>

@@ -24,7 +24,7 @@ describe('AiAnalysisPanel', () => {
     renderWithQueryClient(<AiAnalysisPanel projectId="proj-1" />);
 
     await userEvent.click(
-      screen.getByRole('button', { name: /gerar analise/i }),
+      screen.getByRole('button', { name: /gerar análise/i }),
     );
 
     await waitFor(() =>
@@ -53,7 +53,7 @@ describe('AiAnalysisPanel', () => {
     renderWithQueryClient(<AiAnalysisPanel projectId="proj-2" />);
 
     await userEvent.click(
-      screen.getByRole('button', { name: /gerar analise/i }),
+      screen.getByRole('button', { name: /gerar análise/i }),
     );
 
     await waitFor(() =>

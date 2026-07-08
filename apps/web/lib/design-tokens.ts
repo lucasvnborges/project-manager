@@ -23,3 +23,16 @@ export const RISK_BADGE_CLASSES: Record<ProjectRisk, string> = {
   [ProjectRisk.MEDIO]: 'bg-risk-medio-surface text-risk-medio-content',
   [ProjectRisk.ALTO]: 'bg-risk-alto-surface text-risk-alto-content',
 };
+
+export const STATUS_ADVANCE_BUTTON_CLASSES: Record<ProjectStatus, string> = {
+  [ProjectStatus.EM_ANALISE]:
+    'bg-status-analise-content text-white hover:opacity-90 focus-visible:ring-status-analise-content',
+  [ProjectStatus.APROVADO]:
+    'bg-status-aprovado-content text-white hover:opacity-90 focus-visible:ring-status-aprovado-content',
+  [ProjectStatus.EM_ANDAMENTO]:
+    'bg-status-andamento-content text-white hover:opacity-90 focus-visible:ring-status-andamento-content',
+  [ProjectStatus.ENCERRADO]:
+    'bg-status-encerrado-content text-white hover:opacity-90 focus-visible:ring-status-encerrado-content',
+  [ProjectStatus.CANCELADO]:
+    'bg-status-cancelado-content text-white hover:opacity-90 focus-visible:ring-status-cancelado-content',
+};

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Eye, Pencil, Sparkles, Trash2 } from 'lucide-react';
 import {
   PROJECT_STATUSES_BLOCKING_DELETION,
+  PROJECT_STATUSES_BLOCKING_EDITION,
   type Project,
 } from '@repo/shared-types';
 import { Button } from '@/components/ui/button';
@@ -23,20 +24,23 @@ export function ProjectsTable({
   return (
     <div className="overflow-x-auto rounded-card border border-line bg-surface shadow-subtle">
       <table className="w-full min-w-[860px] text-left text-sm">
-        <thead className="bg-canvas text-xs uppercase tracking-wide text-ink-muted">
+        <thead className="bg-canvas text-xs tracking-wide text-ink-muted">
           <tr>
             <th className="px-4 py-3 font-medium">Nome</th>
             <th className="px-4 py-3 font-medium">Status</th>
             <th className="px-4 py-3 font-medium">Risco</th>
-            <th className="px-4 py-3 font-medium">Orcamento</th>
-            <th className="px-4 py-3 font-medium">Inicio</th>
-            <th className="px-4 py-3 font-medium">Termino previsto</th>
-            <th className="px-4 py-3 text-right font-medium">Acoes</th>
+            <th className="px-4 py-3 font-medium">Orçamento</th>
+            <th className="px-4 py-3 font-medium">Início</th>
+            <th className="px-4 py-3 font-medium">Término previsto</th>
+            <th className="px-4 py-3 text-right font-medium">Ações</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-line">
           {projects.map((project) => {
             const deletionBlocked = PROJECT_STATUSES_BLOCKING_DELETION.includes(
+              project.status,
+            );
+            const editionBlocked = PROJECT_STATUSES_BLOCKING_EDITION.includes(
               project.status,
             );
 
@@ -81,7 +85,7 @@ export function ProjectsTable({
                     <Button variant="ghost" size="icon" asChild>
                       <Link
                         href={`/projects/${project.id}#ai-analysis`}
-                        title="Solicitar analise com IA"
+                        title="Solicitar análise com IA"
                       >
                         <Sparkles className="h-4 w-4" />
                       </Link>
@@ -90,7 +94,12 @@ export function ProjectsTable({
                       variant="ghost"
                       size="icon"
                       onClick={() => onEdit(project)}
-                      title="Editar"
+                      disabled={editionBlocked}
+                      title={
+                        editionBlocked
+                          ? 'Projetos cancelados ou encerrados não podem ser editados'
+                          : 'Editar'
+                      }
                     >
                       <Pencil className="h-4 w-4" />
                     </Button>
@@ -101,7 +110,7 @@ export function ProjectsTable({
                       disabled={deletionBlocked}
                       title={
                         deletionBlocked
-                          ? 'Projetos Em andamento ou Encerrado nao podem ser removidos'
+                          ? 'Projetos em andamento ou encerrados não podem ser removidos'
                           : 'Remover'
                       }
                     >

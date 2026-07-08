@@ -37,7 +37,7 @@ export function DeleteProjectDialog({
         toast.error(
           error instanceof ApiError
             ? error.message
-            : 'Nao foi possivel remover o projeto.',
+            : 'Não foi possível remover o projeto.',
         );
         onOpenChange(false);
       },
@@ -52,7 +52,7 @@ export function DeleteProjectDialog({
           <DialogDescription>
             {`Tem certeza que deseja remover ${
               project ? `"${project.name}"` : 'este projeto'
-            }? Essa acao nao pode ser desfeita.`}
+            }? Essa ação não pode ser desfeita.`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

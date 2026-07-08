@@ -3,6 +3,7 @@
 import { ArrowLeft, Pencil } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { PROJECT_STATUSES_BLOCKING_EDITION } from '@repo/shared-types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useProject } from '@/hooks/use-project';
@@ -35,7 +36,7 @@ export function ProjectDetailClient({
     return (
       <div className="flex flex-col items-center gap-3 rounded-card border border-line bg-surface p-10 text-center">
         <p className="text-sm text-ink-muted">
-          Nao foi possivel carregar este projeto.
+          Não foi possível carregar este projeto.
         </p>
         <Button variant="outline" onClick={() => void refetch()}>
           Tentar novamente
@@ -43,6 +44,8 @@ export function ProjectDetailClient({
       </div>
     );
   }
+
+  const editBlocked = PROJECT_STATUSES_BLOCKING_EDITION.includes(project.status);
 
   return (
     <div className="flex flex-col gap-6">
@@ -68,19 +71,19 @@ export function ProjectDetailClient({
           </p>
           <dl className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
             <div>
-              <dt className="text-ink-muted">Orcamento</dt>
+              <dt className="text-ink-muted">Orçamento</dt>
               <dd className="font-medium text-ink">
                 {formatCurrency(project.budget)}
               </dd>
             </div>
             <div>
-              <dt className="text-ink-muted">Data de inicio</dt>
+              <dt className="text-ink-muted">Data de início</dt>
               <dd className="font-medium text-ink">
                 {formatDate(project.startDate)}
               </dd>
             </div>
             <div>
-              <dt className="text-ink-muted">Previsao de termino</dt>
+              <dt className="text-ink-muted">Previsão de término</dt>
               <dd className="font-medium text-ink">
                 {formatDate(project.endDate)}
               </dd>
@@ -93,7 +96,16 @@ export function ProjectDetailClient({
             </div>
           </dl>
         </div>
-        <Button variant="outline" onClick={() => setEditOpen(true)}>
+        <Button
+          variant="outline"
+          onClick={() => setEditOpen(true)}
+          disabled={editBlocked}
+          title={
+            editBlocked
+              ? 'Projetos cancelados ou encerrados não podem ser editados'
+              : 'Editar'
+          }
+        >
           <Pencil className="h-4 w-4" />
           Editar
         </Button>
