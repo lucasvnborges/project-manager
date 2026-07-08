@@ -5,7 +5,7 @@ import { AiClient } from '../ai-client.interface';
  * Implementacao de fallback do AiClient: nao faz nenhuma chamada de
  * rede/custo, apenas devolve um JSON generico e plausivel no mesmo
  * formato esperado do provedor real. Usada automaticamente quando
- * AI_PROVIDER=mock ou quando OPENAI_API_KEY nao esta configurada (ver
+ * AI_PROVIDER=mock ou quando AI_PROVIDER=ollama não está disponível (ver
  * ai-analysis.module.ts), e tambem nos testes automatizados.
  */
 @Injectable()
@@ -14,14 +14,14 @@ export class MockAiClient implements AiClient {
     return Promise.resolve(
       JSON.stringify({
         summary:
-          'Analise gerada em modo simulado (sem chamada a um provedor de IA real). ' +
+          'Análise gerada em modo simulado (sem chamada a um provedor de IA real). ' +
           'Este texto ilustra o formato de resposta esperado da funcionalidade.',
         attentionPoints: [
-          'Configure AI_PROVIDER=openai e OPENAI_API_KEY para obter uma analise real.',
-          'Revise prazos e orcamento periodicamente para manter o risco calculado atualizado.',
+          'Configure AI_PROVIDER=ollama e suba o serviço Ollama para obter uma análise real.',
+          'Revise prazos e orçamento periodicamente para manter o risco calculado atualizado.',
         ],
         executiveRecommendation:
-          'Nenhuma recomendacao real disponivel no modo simulado; trate este retorno apenas como exemplo estrutural.',
+          'Nenhuma recomendação real disponível no modo simulado; trate este retorno apenas como exemplo estrutural.',
       }),
     );
   }

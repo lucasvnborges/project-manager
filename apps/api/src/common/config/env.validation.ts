@@ -13,7 +13,7 @@ export const envValidationSchema = Joi.object({
   PORT: Joi.number().default(3001),
   DATABASE_URL: Joi.string().required(),
   CORS_ORIGIN: Joi.string().default('http://localhost:3000'),
-  AI_PROVIDER: Joi.string().valid('openai', 'mock').default('mock'),
-  OPENAI_API_KEY: Joi.string().allow('').optional(),
-  OPENAI_MODEL: Joi.string().default('gpt-4o-mini'),
+  AI_PROVIDER: Joi.string().valid('ollama', 'mock').default('mock'),
+  OLLAMA_BASE_URL: Joi.string().default('http://localhost:11434'),
+  OLLAMA_MODEL: Joi.string().default('llama3.2'),
 });

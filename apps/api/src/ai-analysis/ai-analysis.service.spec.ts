@@ -92,7 +92,7 @@ describe('AiAnalysisService', () => {
 
     expect(result.summary).toContain('desculpe');
     expect(result.attentionPoints).toEqual([]);
-    expect(result.executiveRecommendation).toContain('Revisao manual');
+    expect(result.executiveRecommendation).toContain('Revisão manual');
   });
 
   it('ignora campos com tipos inesperados e aplica fallback apenas neles', async () => {
@@ -108,6 +108,6 @@ describe('AiAnalysisService', () => {
 
     expect(result.summary).toContain('Projeto Z');
     expect(result.attentionPoints).toEqual([]);
-    expect(result.executiveRecommendation).toContain('Revisao manual');
+    expect(result.executiveRecommendation).toContain('Revisão manual');
   });
 });

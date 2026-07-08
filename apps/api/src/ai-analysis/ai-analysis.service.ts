@@ -50,7 +50,7 @@ export class AiAnalysisService {
       };
     } catch {
       this.logger.warn(
-        'Nao foi possivel interpretar a resposta da IA como JSON; usando fallback textual.',
+        'Não foi possível interpretar a resposta da IA como JSON; usando fallback textual.',
       );
       return {
         summary: raw.trim().slice(0, 600) || this.fallbackSummary(project),
@@ -77,10 +77,10 @@ export class AiAnalysisService {
   }
 
   private fallbackSummary(project: Project): string {
-    return `Nao foi possivel gerar automaticamente um resumo estruturado para "${project.name}".`;
+    return `Não foi possível gerar automaticamente um resumo estruturado para "${project.name}".`;
   }
 
   private fallbackRecommendation(): string {
-    return 'Revisao manual recomendada antes de tomar decisoes com base nesta analise.';
+    return 'Revisão manual recomendada antes de tomar decisões com base nesta análise.';
   }
 }
