@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { envValidationSchema } from './common/config/env.validation';
+import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProjectsModule } from './projects/projects.module';
 
@@ -10,6 +11,7 @@ import { ProjectsModule } from './projects/projects.module';
       isGlobal: true,
       validationSchema: envValidationSchema,
     }),
+    HealthModule,
     PrismaModule,
     ProjectsModule,
   ],
