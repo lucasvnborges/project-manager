@@ -7,7 +7,10 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
   },
   "devDependencies": {
     "prettier": "^3.7.4",
@@ -20,7 +23,7 @@
   "devEngines": {
     "packageManager": {
       "name": "npm",
-      "version": "10.9.2"
+      "version": ">=10.9.2"
     }
   },
   "workspaces": [
