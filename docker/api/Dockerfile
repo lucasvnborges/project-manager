@@ -20,6 +20,7 @@ COPY turbo.json ./
 
 RUN npm run build --workspace=@repo/shared-types
 WORKDIR /app/apps/api
+ENV DATABASE_URL="file:/data/app.db"
 RUN npx prisma generate
 RUN npm run build
 

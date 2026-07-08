@@ -14,7 +14,7 @@ O desenvolvimento foi estruturado em etapas sequenciais, cada uma orientada e re
 1. **Planejamento e arquitetura**: definição da estrutura de pastas, camadas do backend, contratos compartilhados, design system e sequência de commits, em modo de planejamento (sem edição de arquivos), antes de qualquer código ser escrito.
 2. **Backend (NestJS)**: implementação das camadas (controller/service/repository), regras de negócio (cálculo de risco, máquina de estados, bloqueio de exclusão/edição), DTOs/validação, tratamento de erros, a feature de análise com IA (prompt builder, `AiClient`/`OllamaClient`/`MockAiClient`, `AiAnalysisService`) e testes (unitários e e2e).
 3. **Frontend (Next.js)**: design system (tokens Tailwind), componentes de UI, listagem/formulário/detalhe de projetos, integração com a API via TanStack Query, e testes de componentes (Vitest + RTL + MSW).
-4. **Infraestrutura**: containerização com Docker Compose (api, web, Ollama, nginx) e preparação para deploy em droplet.
+4. **Infraestrutura**: containerização com Docker Compose (api, web, Ollama, Caddy) e preparação para deploy em droplet.
 5. **Refinamentos**: ajustes pontuais de UX, revisão de texto e correções reportadas ao longo do uso.
 6. **Documentação**: este arquivo e o `README.md`.
 

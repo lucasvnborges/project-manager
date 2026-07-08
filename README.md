@@ -110,11 +110,11 @@ Para usar a integração real, defina `AI_PROVIDER=ollama` e suba o Ollama (`oll
 
 ## Docker e deploy (DigitalOcean)
 
-A stack completa (nginx + web + api + Ollama + SQLite persistente) pode ser executada com Docker Compose:
+A stack completa (Caddy + web + api + Ollama + SQLite persistente) pode ser executada com Docker Compose:
 
 ```bash
 cp .env.docker.example .env
-# edite CORS_ORIGIN com o IP ou domínio do servidor
+# edite DOMAIN, ACME_EMAIL e CORS_ORIGIN com seu domínio
 npm run docker:up
 ```
 
