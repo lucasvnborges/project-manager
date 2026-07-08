@@ -56,11 +56,11 @@ Documentação interativa da API (Swagger): **http://localhost:3001/docs**.
 | `PORT` | Porta da API | `3001` |
 | `DATABASE_URL` | Conexão SQLite (arquivo local) | `file:./dev.db` |
 | `CORS_ORIGIN` | Origem permitida para o frontend | `http://localhost:3000` |
-| `AI_PROVIDER` | `openai` (real) ou `mock` (fallback sem custo/rede) | `mock` |
-| `OPENAI_API_KEY` | Chave da OpenAI (obrigatória apenas se `AI_PROVIDER=openai`) | — |
-| `OPENAI_MODEL` | Modelo usado na análise | `gpt-4o-mini` |
+| `AI_PROVIDER` | `ollama` (local) ou `mock` (simulado) | `mock` |
+| `OLLAMA_BASE_URL` | URL base do Ollama | `http://localhost:11434` |
+| `OLLAMA_MODEL` | Modelo usado na análise | `llama3.2` |
 
-Se `AI_PROVIDER=openai` mas `OPENAI_API_KEY` não estiver definida, a aplicação usa automaticamente o `MockAiClient` (ver seção [Análise com IA](#análise-com-ia)).
+Se `AI_PROVIDER=ollama` mas o Ollama não estiver acessível, a requisição de análise falhará com erro HTTP (ver seção [Análise com IA](#análise-com-ia)).
 
 **`apps/web/.env.local`**
 
@@ -102,11 +102,23 @@ A chamada ao provedor de IA está isolada em camadas próprias (nunca no control
 
 - `ProjectAnalysisPromptBuilder`: monta o prompt a partir dos dados do projeto.
 - `AiClient` (interface): porta que qualquer provedor deve implementar.
-- `OpenAiClient`: implementação real, via SDK oficial da OpenAI.
-- `MockAiClient`: implementação simulada (sem custo/rede), usada como fallback quando não há chave configurada e nos testes automatizados.
+- `OllamaClient`: implementação real, via API HTTP do Ollama (`/api/chat` com `format: json`).
+- `MockAiClient`: implementação simulada (sem custo/rede), usada quando `AI_PROVIDER=mock` e nos testes automatizados.
 - `AiAnalysisService`: orquestra as peças acima e normaliza a resposta, com fallback textual caso o modelo não retorne um JSON válido.
 
-Para usar a integração real, defina `AI_PROVIDER=openai` e `OPENAI_API_KEY` em `apps/api/.env`.
+Para usar a integração real, defina `AI_PROVIDER=ollama` e suba o Ollama (`ollama serve` localmente ou via Docker Compose).
+
+## Docker e deploy (DigitalOcean)
+
+A stack completa (nginx + web + api + Ollama + SQLite persistente) pode ser executada com Docker Compose:
+
+```bash
+cp .env.docker.example .env
+# edite CORS_ORIGIN com o IP ou domínio do servidor
+npm run docker:up
+```
+
+Consulte [`DEPLOY.md`](DEPLOY.md) para o passo a passo completo em um droplet DigitalOcean.
 
 ## Testes
 
@@ -127,7 +139,7 @@ npm run test:e2e --workspace=api
 - **Orçamento como `Float`**: o provider SQLite do Prisma tem suporte limitado a `Decimal`; em um cenário de produção com outro banco, `Decimal`/valores em centavos seriam preferíveis para evitar imprecisão de ponto flutuante.
 - **Status/risco armazenados como `String` no banco**: o SQLite não possui enum nativo; os valores válidos são garantidos pela aplicação (`class-validator` + `@repo/shared-types`), não por uma constraint do banco.
 - **Estados terminais**: `Encerrado` e `Cancelado` não permitem nenhuma transição posterior (extensão razoável da regra "qualquer status → Cancelado").
-- **Modelo de IA padrão**: `gpt-4o-mini`, por custo/latência.
+- **Modelo de IA padrão**: `llama3.2` via Ollama, executável localmente ou em container Docker.
 - **Sem autenticação, paginação avançada ou filtros complexos**: fora do escopo do desafio.
 
 ## Scripts principais (raiz)
@@ -139,3 +151,5 @@ npm run test:e2e --workspace=api
 | `npm run lint` | Lint em todo o monorepo |
 | `npm run check-types` | Checagem de tipos em todo o monorepo |
 | `npm run test` | Testes unitários de api e web |
+| `npm run docker:up` | Sobe a stack completa com Docker Compose |
+| `npm run docker:down` | Para e remove os containers |
