@@ -3,6 +3,7 @@ import { Project, ProjectRisk, ProjectStatus } from '@repo/shared-types';
 import { InvalidDateRangeException } from './exceptions/invalid-date-range.exception';
 import { InvalidStatusTransitionException } from './exceptions/invalid-status-transition.exception';
 import { ProjectDeletionNotAllowedException } from './exceptions/project-deletion-not-allowed.exception';
+import { ProjectEditionNotAllowedException } from './exceptions/project-edition-not-allowed.exception';
 import { ProjectNotFoundException } from './exceptions/project-not-found.exception';
 import { ProjectsRepository } from './projects.repository';
 import { ProjectsService } from './projects.service';
@@ -129,6 +130,19 @@ describe('ProjectsService', () => {
         expect.objectContaining({ risk: ProjectRisk.MEDIO }),
       );
     });
+
+    it.each([ProjectStatus.ENCERRADO, ProjectStatus.CANCELADO])(
+      'bloqueia a edicao de projetos com status %s',
+      async (status) => {
+        repository.findById.mockResolvedValue(buildProject({ status }));
+
+        await expect(
+          service.update('project-1', { name: 'Novo nome' }),
+        ).rejects.toThrow(ProjectEditionNotAllowedException);
+
+        expect(repository.update).not.toHaveBeenCalled();
+      },
+    );
   });
 
   describe('remove', () => {

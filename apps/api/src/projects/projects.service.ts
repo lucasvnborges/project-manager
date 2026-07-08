@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   PROJECT_STATUSES_BLOCKING_DELETION,
+  PROJECT_STATUSES_BLOCKING_EDITION,
   Project,
   ProjectStatus,
 } from '@repo/shared-types';
@@ -9,6 +10,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { InvalidDateRangeException } from './exceptions/invalid-date-range.exception';
 import { ProjectDeletionNotAllowedException } from './exceptions/project-deletion-not-allowed.exception';
+import { ProjectEditionNotAllowedException } from './exceptions/project-edition-not-allowed.exception';
 import { ProjectNotFoundException } from './exceptions/project-not-found.exception';
 import { ProjectsRepository } from './projects.repository';
 import { RiskCalculatorService } from './risk/risk-calculator.service';
@@ -58,6 +60,10 @@ export class ProjectsService {
 
   async update(id: string, dto: UpdateProjectDto): Promise<Project> {
     const existing = await this.findById(id);
+
+    if (PROJECT_STATUSES_BLOCKING_EDITION.includes(existing.status)) {
+      throw new ProjectEditionNotAllowedException(existing.status);
+    }
 
     const startDate = dto.startDate
       ? new Date(dto.startDate)

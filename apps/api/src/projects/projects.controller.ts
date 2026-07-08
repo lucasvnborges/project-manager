@@ -28,10 +28,10 @@ export class ProjectsController {
 
   @Post()
   @ApiOperation({
-    summary: 'Cria um projeto (status inicial sempre Em analise)',
+    summary: 'Cria um projeto (status inicial sempre Em análise)',
   })
   @ApiResponse({ status: 201, type: ProjectResponseDto })
-  @ApiResponse({ status: 400, description: 'Dados de entrada invalidos' })
+  @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
   async create(
     @Body() createProjectDto: CreateProjectDto,
   ): Promise<ProjectResponseDto> {
@@ -51,7 +51,7 @@ export class ProjectsController {
   @ApiOperation({ summary: 'Busca um projeto por id' })
   @ApiParam({ name: 'id', example: '9b0a3655-3845-4f72-8514-c560c926edee' })
   @ApiResponse({ status: 200, type: ProjectResponseDto })
-  @ApiResponse({ status: 404, description: 'Projeto nao encontrado' })
+  @ApiResponse({ status: 404, description: 'Projeto não encontrado' })
   async findOne(@Param('id') id: string): Promise<ProjectResponseDto> {
     const project = await this.projectsService.findById(id);
     return ProjectResponseDto.fromDomain(project);
@@ -59,12 +59,16 @@ export class ProjectsController {
 
   @Patch(':id')
   @ApiOperation({
-    summary: 'Atualiza dados do projeto (recalcula o risco quando necessario)',
+    summary: 'Atualiza dados do projeto (recalcula o risco quando necessário)',
   })
   @ApiParam({ name: 'id', example: '9b0a3655-3845-4f72-8514-c560c926edee' })
   @ApiResponse({ status: 200, type: ProjectResponseDto })
-  @ApiResponse({ status: 400, description: 'Dados de entrada invalidos' })
-  @ApiResponse({ status: 404, description: 'Projeto nao encontrado' })
+  @ApiResponse({ status: 400, description: 'Dados de entrada inválidos' })
+  @ApiResponse({ status: 404, description: 'Projeto não encontrado' })
+  @ApiResponse({
+    status: 409,
+    description: 'Edição bloqueada pelo status atual do projeto',
+  })
   async update(
     @Param('id') id: string,
     @Body() updateProjectDto: UpdateProjectDto,
@@ -76,14 +80,14 @@ export class ProjectsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
-    summary: 'Remove um projeto (bloqueado para Em andamento/Encerrado)',
+    summary: 'Remove um projeto (bloqueado para em andamento/encerrado)',
   })
   @ApiParam({ name: 'id', example: '9b0a3655-3845-4f72-8514-c560c926edee' })
   @ApiResponse({ status: 204, description: 'Projeto removido com sucesso' })
-  @ApiResponse({ status: 404, description: 'Projeto nao encontrado' })
+  @ApiResponse({ status: 404, description: 'Projeto não encontrado' })
   @ApiResponse({
     status: 409,
-    description: 'Exclusao bloqueada pelo status atual do projeto',
+    description: 'Exclusão bloqueada pelo status atual do projeto',
   })
   async remove(@Param('id') id: string): Promise<void> {
     await this.projectsService.remove(id);
@@ -91,14 +95,14 @@ export class ProjectsController {
 
   @Patch(':id/status')
   @ApiOperation({
-    summary: 'Altera o status do projeto respeitando a maquina de estados',
+    summary: 'Altera o status do projeto respeitando a máquina de estados',
   })
   @ApiParam({ name: 'id', example: '9b0a3655-3845-4f72-8514-c560c926edee' })
   @ApiResponse({ status: 200, type: ProjectResponseDto })
-  @ApiResponse({ status: 404, description: 'Projeto nao encontrado' })
+  @ApiResponse({ status: 404, description: 'Projeto não encontrado' })
   @ApiResponse({
     status: 409,
-    description: 'Transicao de status nao permitida',
+    description: 'Transição de status não permitida',
   })
   async changeStatus(
     @Param('id') id: string,
@@ -114,11 +118,11 @@ export class ProjectsController {
   @Get(':id/ai-analysis')
   @ApiOperation({
     summary:
-      'Gera uma analise textual do projeto com apoio de IA (resumo, pontos de atencao e recomendacao executiva)',
+      'Gera uma análise textual do projeto com apoio de IA (resumo, pontos de atenção e recomendação executiva)',
   })
   @ApiParam({ name: 'id', example: '9b0a3655-3845-4f72-8514-c560c926edee' })
-  @ApiResponse({ status: 200, description: 'Analise gerada com sucesso' })
-  @ApiResponse({ status: 404, description: 'Projeto nao encontrado' })
+  @ApiResponse({ status: 200, description: 'Análise gerada com sucesso' })
+  @ApiResponse({ status: 404, description: 'Projeto não encontrado' })
   async getAiAnalysis(@Param('id') id: string): Promise<ProjectAiAnalysis> {
     const project = await this.projectsService.findById(id);
     return this.aiAnalysisService.analyze(project);

@@ -18,7 +18,7 @@ export class CreateProjectDto {
 
   @ApiProperty({
     example: '2026-01-01',
-    description: 'Data de inicio (ISO 8601)',
+    description: 'Data de início (ISO 8601)',
   })
   @IsDateString()
   startDate!: string;
@@ -26,24 +26,24 @@ export class CreateProjectDto {
   @ApiProperty({
     example: '2026-04-01',
     description:
-      'Previsao de termino (ISO 8601), deve ser posterior a startDate',
+      'Previsão de término (ISO 8601), deve ser posterior a startDate',
   })
   @IsDateString()
   @IsAfter('startDate', {
-    message: 'endDate (previsao de termino) deve ser posterior a startDate',
+    message: 'endDate (previsão de término) deve ser posterior a startDate',
   })
   endDate!: string;
 
   @ApiProperty({
     example: 80000,
     minimum: 0,
-    description: 'Orcamento total em R$',
+    description: 'Orçamento total em R$',
   })
   @IsNumber()
   @Min(0)
   budget!: number;
 
-  @ApiProperty({ example: 'Reconstrucao do site institucional da empresa.' })
+  @ApiProperty({ example: 'Reconstrução do site institucional da empresa.' })
   @IsString()
   @IsNotEmpty()
   description!: string;
