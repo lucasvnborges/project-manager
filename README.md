@@ -118,7 +118,7 @@ cp .env.docker.example .env
 npm run docker:up
 ```
 
-Consulte [`DEPLOY.md`](DEPLOY.md) para o passo a passo completo em um droplet DigitalOcean.
+Consulte [`DEPLOY.md`](DEPLOY.md) para o passo a passo completo em um droplet DigitalOcean (porta 8080 quando 80/443 já estiverem em uso).
 
 ## Testes
 

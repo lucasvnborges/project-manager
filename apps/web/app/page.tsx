@@ -1,5 +1,10 @@
-import { redirect } from 'next/navigation';
+import { AppShell } from '@/components/layout/app-shell';
+import { ProjectsPageClient } from '@/components/projects/projects-page-client';
 
-export default function RootPage(): never {
-  redirect('/projects');
+export default function RootPage(): React.JSX.Element {
+  return (
+    <AppShell>
+      <ProjectsPageClient />
+    </AppShell>
+  );
 }

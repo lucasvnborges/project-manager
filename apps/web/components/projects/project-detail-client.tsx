@@ -50,7 +50,7 @@ export function ProjectDetailClient({
   return (
     <div className="flex flex-col gap-6">
       <Link
-        href="/projects"
+        href="/"
         className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-ink"
       >
         <ArrowLeft className="h-4 w-4" />

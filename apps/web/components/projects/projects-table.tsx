@@ -51,7 +51,7 @@ export function ProjectsTable({
               >
                 <td className="px-4 py-3 font-medium text-ink">
                   <Link
-                    href={`/projects/${project.id}`}
+                    href={`/project/${project.id}`}
                     className="hover:text-accent hover:underline"
                   >
                     {project.name}
@@ -76,7 +76,7 @@ export function ProjectsTable({
                   <div className="flex items-center justify-end gap-1">
                     <Button variant="ghost" size="icon" asChild>
                       <Link
-                        href={`/projects/${project.id}`}
+                        href={`/project/${project.id}`}
                         title="Ver detalhes"
                       >
                         <Eye className="h-4 w-4" />
@@ -84,7 +84,7 @@ export function ProjectsTable({
                     </Button>
                     <Button variant="ghost" size="icon" asChild>
                       <Link
-                        href={`/projects/${project.id}#ai-analysis`}
+                        href={`/project/${project.id}#ai-analysis`}
                         title="Solicitar análise com IA"
                       >
                         <Sparkles className="h-4 w-4" />

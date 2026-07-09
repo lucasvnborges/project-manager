@@ -1,23 +1,26 @@
 # Deploy em droplet DigitalOcean
 
-Stack: **Caddy (HTTPS)** + web + api + Ollama + SQLite.
+Stack: **Caddy (porta 8080)** + web + api + Ollama + SQLite.
 
-**Requisitos:** Ubuntu 22.04+, 4 GB RAM, 2 vCPUs, portas 80 e 443 abertas.
+> Se o droplet já usa as portas **80/443** para outra aplicação, este projeto sobe na **8080** sem alterar a outra app.
+
+**Requisitos:** Ubuntu 22.04+, 4 GB RAM, 2 vCPUs, porta **8080** aberta.
 
 ## Passo a passo
 
 ### 1. DNS
 
-Crie registro **A** apontando `@` (e opcionalmente `www`) para o IP do droplet.
+Registro **A** de `projectmanager` → IP do droplet.
 
 ### 2. Firewall
 
 ```bash
 sudo ufw allow OpenSSH
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
+sudo ufw allow 8080/tcp
 sudo ufw enable
 ```
+
+(Não é necessário liberar 80/443 para este app.)
 
 ### 3. Código no servidor
 
@@ -35,34 +38,37 @@ nano .env
 
 ```env
 DOMAIN=projectmanager.semtrip.com
-ACME_EMAIL=seu-email@exemplo.com
-CORS_ORIGIN=https://projectmanager.semtrip.com
+CORS_ORIGIN=http://projectmanager.semtrip.com:8080
 NEXT_PUBLIC_API_URL=
 OLLAMA_MODEL=llama3.2
+CADDY_HTTP_PORT=8080
 ```
 
 ### 5. Subir
 
 ```bash
 docker compose up -d --build
-docker compose logs -f
+docker compose ps
 ```
 
-Na primeira execução o Ollama baixa o modelo (pode demorar). O Caddy emite o certificado HTTPS automaticamente.
+### 6. Acessar
 
-### 6. Verificar
+- App: `http://projectmanager.semtrip.com:8080`
+- Swagger: `http://projectmanager.semtrip.com:8080/docs`
+- Health: `http://projectmanager.semtrip.com:8080/health`
 
-- `https://projectmanager.semtrip.com` — frontend
-- `https://projectmanager.semtrip.com/docs` — Swagger
-- `https://projectmanager.semtrip.com/health` — health check
+## Convivência com outra app na 80/443
+
+A outra aplicação continua em `https://seu-outro-dominio.com` (portas 80/443).
+
+Este projeto responde **somente na porta 8080**. Acessar `https://projectmanager.semtrip.com` (sem `:8080`) ainda cai na outra app — use sempre **`:8080`**.
 
 ## Comandos úteis
 
 ```bash
 docker compose ps
 docker compose down
-docker compose up -d --build          # após atualizar código
-docker compose up -d --build web      # após mudar CORS_ORIGIN
+docker compose up -d --build
 docker compose logs -f caddy
 ```
 
