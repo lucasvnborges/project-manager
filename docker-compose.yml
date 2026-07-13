@@ -18,7 +18,7 @@ services:
         condition: service_healthy
     environment:
       OLLAMA_HOST: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:1b}
     volumes:
       - ollama_data:/root/.ollama
     entrypoint: ['/bin/sh', '-c']
@@ -35,7 +35,7 @@ services:
       DATABASE_URL: file:/data/app.db
       AI_PROVIDER: ollama
       OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:1b}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
     volumes:
       - api_data:/data

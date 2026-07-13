@@ -7,7 +7,24 @@ import type {
   UpdateProjectInput,
 } from '@repo/shared-types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+function resolveApiUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_API_URL;
+
+  if (configured !== undefined && configured !== '') {
+    return configured.replace(/\/$/, '');
+  }
+
+  if (
+    typeof window !== 'undefined' &&
+    process.env.NODE_ENV === 'production'
+  ) {
+    return '';
+  }
+
+  return 'http://localhost:3001';
+}
+
+const API_URL = resolveApiUrl();
 
 /**
  * Erro tipado lancado pelo cliente HTTP, carregando o statusCode e (se
@@ -31,6 +48,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
+      Accept: 'application/json',
       'Content-Type': 'application/json',
       ...init?.headers,
     },

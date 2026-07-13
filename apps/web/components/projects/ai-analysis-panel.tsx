@@ -46,6 +46,13 @@ export function AiAnalysisPanel({
         </Button>
       </div>
 
+      {generateAnalysis.isPending && (
+        <p className="mt-4 text-sm text-ink-muted">
+          A primeira análise pode levar até 2 minutos enquanto o modelo de IA
+          é carregado. Aguarde sem fechar a página.
+        </p>
+      )}
+
       {generateAnalysis.isError && (
         <p className="mt-4 text-sm text-risk-alto-content">
           {generateAnalysis.error instanceof ApiError

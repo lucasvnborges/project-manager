@@ -21,7 +21,7 @@ const logger = new Logger('AiAnalysisModule');
         if (provider === 'ollama') {
           const baseUrl =
             config.get<string>('OLLAMA_BASE_URL') ?? 'http://localhost:11434';
-          const model = config.get<string>('OLLAMA_MODEL') ?? 'llama3.2';
+          const model = config.get<string>('OLLAMA_MODEL') ?? 'llama3.2:1b';
 
           logger.log(
             `Usando OllamaClient (${baseUrl}, modelo ${model}) para análise com IA.`,

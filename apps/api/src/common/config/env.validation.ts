@@ -15,5 +15,5 @@ export const envValidationSchema = Joi.object({
   CORS_ORIGIN: Joi.string().default('http://localhost:3000'),
   AI_PROVIDER: Joi.string().valid('ollama', 'mock').default('mock'),
   OLLAMA_BASE_URL: Joi.string().default('http://localhost:11434'),
-  OLLAMA_MODEL: Joi.string().default('llama3.2'),
+  OLLAMA_MODEL: Joi.string().default('llama3.2:1b'),
 });
